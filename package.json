@@ -1,0 +1,13 @@
+{
+  "name": "desktop-qa-demo-report",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Allure report for the Python desktop QA demonstration",
+  "scripts": {
+    "report": "allure generate allure-results",
+    "report:open": "allure open allure-report"
+  },
+  "devDependencies": {
+    "allure": "^3.0.0"
+  }
+}

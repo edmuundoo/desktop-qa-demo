@@ -1,0 +1,13 @@
+{
+  "name": "Desktop TCP signals",
+  "output": "./allure-report",
+  "plugins": {
+    "awesome": {
+      "options": {
+        "singleFile": true,
+        "reportLanguage": "ru",
+        "publish": false
+      }
+    }
+  }
+}

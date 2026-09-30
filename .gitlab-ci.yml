@@ -1,0 +1,42 @@
+# Дополнительный способ проверить демонстрацию в целевой Linux-среде.
+# Локальное наличие файла не означает, что этот job уже выполнялся.
+stages:
+  - test
+  - report
+
+test:
+  stage: test
+  image: python:3.13-slim
+  variables:
+    QT_QPA_PLATFORM: offscreen
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends libegl1 libgl1 libglib2.0-0 libdbus-1-3 libxkbcommon0 libfontconfig1
+    - python -m pip install -r requirements-tested.txt
+  script:
+    - |
+      result=0
+      python -m pytest -v --alluredir=allure-results --clean-alluredir > test-result.txt 2>&1 || result=$?
+      cat test-result.txt
+      exit "$result"
+  artifacts:
+    when: always
+    paths:
+      - artifacts/
+      - allure-results/
+      - test-result.txt
+
+allure-report:
+  stage: report
+  image: node:22-bookworm-slim
+  when: always
+  needs:
+    - job: test
+      artifacts: true
+  script:
+    - npm ci --ignore-scripts --no-audit --no-fund
+    - npm run report
+  artifacts:
+    when: always
+    paths:
+      - allure-report/
